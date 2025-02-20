@@ -12,7 +12,7 @@ require('dotenv').config();
 AWS.config.update({
     accessKeyId: process.env.ACCESS_KEY,
     secretAccessKey: process.env.SECRET_KEY,
-    region: 'ap-southeast-2'
+    region: process.env.REGION
 });
 
 const storage = multer.diskStorage({
@@ -41,7 +41,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
         const params = {
             Bucket: '11july2024',
-            Key: req.file.originalname,
+            Key: `viewer/models/${req.file.originalname}`,
             Body: fileContent,
             ContentType: 'model/gltf-binary',
         };
