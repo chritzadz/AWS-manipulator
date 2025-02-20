@@ -3,19 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Upload</title>
-    <link rel="stylesheet" href="index.css">
+    <title>Home</title>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
+    <script type="module" src="js/index.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Upload a Photo</h1>
-        <form id="uploadForm" enctype="multipart/form-data">
-            <input type="file" id="fileInput" name="file" accept="image/*" required>
-            <button type="submit">Upload</button>
-        </form>
-        <div id="message"></div>
+    <div class="createBucketContainer">
+        <h1>Choose Bucket</h1>
+        <ul id="bucketList"></ul>
     </div>
-
-    <script src="index.js"></script>
 </body>
 </html>

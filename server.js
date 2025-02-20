@@ -34,6 +34,17 @@ app.listen(PORT, () => {
 
 const s3 = new AWS.S3();
 
+// get list of existing bucket
+app.get('/getBucketList', (req, res) => {
+    s3.listBuckets((err, data) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        const bucketList = data.Buckets.map(bucket => bucket.Name);
+        res.json(bucketList);
+    });
+});
+
 // .glb file endpoint
 app.post('/upload', upload.single('file'), async (req, res) => {
     if (req.file) {
