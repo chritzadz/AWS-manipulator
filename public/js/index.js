@@ -22,5 +22,10 @@ function displayBuckets(buckets) {
 }
 
 window.onload = () => {
-    fetchBuckets(); // Call the function to fetch buckets on load
+    fetchBuckets();
 };
+
+document.getElementById('createBucketButton').addEventListener('click', function(event) {
+    event.preventDefault();
+    window.location.href = './createBucketForm.html';
+});
