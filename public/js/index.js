@@ -29,3 +29,36 @@ document.getElementById('createBucketButton').addEventListener('click', function
     event.preventDefault();
     window.location.href = './createBucketForm.html';
 });
+
+document.getElementById('chooseWorkingBucketForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const bucketName = document.getElementById('chooseWorkingBucketInput').value;
+
+    const data = {
+        bucketName : bucketName,
+        paramName : "MODEL_S3_BUCKET"
+    };
+    
+    fetch('/changeWorkingBucketParam', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        messageDiv.textContent = data.message;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        messageDiv.textContent = 'An error occurred while changing the bucket parameter.';
+    });
+
+    window.location.href = './upload.html';
+});
