@@ -1,15 +1,11 @@
-import express, { Router } from "express";
-import serverless from "serverless-http";
-
-const AWS = require('aws-sdk');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-const cors = require('cors');
-const axios = require('axios');
-const crypto = require('crypto');
-const api = express();
-const router = Router();
+import AWS from 'aws-sdk';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import cors from 'cors';
+import axios from 'axios';
+import crypto from 'crypto';
+import express, { Router } from 'express';
 
 api.use(cors());
 require('dotenv').config();
