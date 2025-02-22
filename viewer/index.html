@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html>
 
+<!-- 
+WARNING: INDEX.HTML IS ASSUMED HOSTED THORUGH S3 STATIC HOSTING. IT IS UPLOADED TO ROOT NOT IN VIEWER.
+-->
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <title>Avatar</title>
 
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <script id="data" type="text/csv" src="data.csv"></script>
+    <link rel="stylesheet" type="text/css" href="./viewer/style.css" />
+    <script id="data" type="text/csv" src="./viewer/data.csv"></script>
 
     <!-- Babylon.js -->
     <script src="https://code.jquery.com/pep/0.4.2/pep.min.js"></script>
@@ -29,7 +33,7 @@
 
 <body>
     <canvas id="renderCanvas"></canvas>
-    <script src="main.js"></script>
+    <script src="./viewer/main.js"></script>
 </body>
 
 </html>

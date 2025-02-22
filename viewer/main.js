@@ -19,7 +19,7 @@ function writeValue(val) {
 
 function loadCSVFile() {
     return new Promise((resolve, reject) => {
-        fetch('data.csv')
+        fetch('viewer/data.csv')
             .then(response => response.text())
             .then(data => {
                 const rows = data.split(/\r?\n/);
@@ -49,7 +49,7 @@ function findModelById(id) {
 document.addEventListener('DOMContentLoaded', function () {
     var canvas = document.getElementById("renderCanvas");
     var engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
-    var filePath = "models/";
+    var filePath = "viewer/models/";
     var fileType = '.glb';
 
     var url_id = urlParam('id');

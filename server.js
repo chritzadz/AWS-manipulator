@@ -44,7 +44,7 @@ const uploadViewer = async (bucketName) => {
     await createFolder(bucketName, 'viewer/background/');
     await createFolder(bucketName, 'viewer/models/');
     await uploadFile(bucketName, './viewer/data.csv', 'viewer/data.csv');
-    await uploadFile(bucketName, './viewer/index.html', 'viewer/index.html');
+    await uploadFile(bucketName, './viewer/index.html', 'index.html');
     await uploadFile(bucketName, './viewer/main.js', 'viewer/main.js');
     await uploadFile(bucketName, './viewer/style.css', 'viewer/style.css');
 };
