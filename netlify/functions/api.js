@@ -1,3 +1,6 @@
+import express, { Router } from "express";
+import serverless from "serverless-http";
+
 const AWS = require('aws-sdk');
 const express = require('express');
 const multer = require('multer');
@@ -6,11 +9,10 @@ const fs = require('fs');
 const cors = require('cors');
 const axios = require('axios');
 const crypto = require('crypto');
+const api = express();
+const router = Router();
 
-const app = express();
-const PORT = 5500;
-
-app.use(cors());
+api.use(cors());
 require('dotenv').config();
 
 AWS.config.update({
@@ -19,25 +21,23 @@ AWS.config.update({
     region: process.env.REGION
 });
 
+const s3 = new AWS.S3();
+const ssm = new AWS.SSM();
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, '/tmp/'); //tmp from netlify
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname));
     }
 });
-
 const upload = multer({ storage });
 
-app.use(express.static('public'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+/*
+This part of the code are used as helper function
+*/
 
-const s3 = new AWS.S3();
-const ssm = new AWS.SSM();
-
-//help methods
 const uploadViewer = async (bucketName) => {
     //create by order
     await createFolder(bucketName, 'viewer/');
@@ -45,7 +45,7 @@ const uploadViewer = async (bucketName) => {
     await createFolder(bucketName, 'viewer/models/');
     await uploadFile(bucketName, './viewer/data.csv', 'viewer/data.csv', 'text/csv');
     await uploadFile(bucketName, './viewer/index.html', 'index.html', 'text/html');
-    await uploadFile(bucketName, './viewer/main.js', 'viewer/main.js', 'application/javascript');
+    await uploadFile(bucketName, './viewer/main.js', 'viewer/main.js', 'apilication/javascript');
     await uploadFile(bucketName, './viewer/style.css', 'viewer/style.css', 'text/css');
 };
 
@@ -125,12 +125,12 @@ const encryptNumber = async (number) => {
     return hash.slice(0, 12);
 };
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+/* 
+ROUTES
+*/
 
 // get list of existing bucket
-app.get('/getBucketList', (req, res) => {
+api.get('/getBucketList', (req, res) => {
     s3.listBuckets((err, data) => {
         if (err) {
             return res.status(500).json({ error: err.message });
@@ -141,7 +141,7 @@ app.get('/getBucketList', (req, res) => {
 });
 
 //create new s3
-app.post('/createBucket', async (req, res) => {
+api.post('/createBucket', async (req, res) => {
     console.log("bucket_name: " + req.body.bucketName);
     const bucketName = req.body.bucketName;
     if (!bucketName) {
@@ -235,7 +235,7 @@ app.post('/createBucket', async (req, res) => {
 });
 
 // .glb file endpoint
-app.post('/upload', upload.single('file'), async (req, res) => {
+api.post('/upload', upload.single('file'), async (req, res) => {
     if (req.file) {
         const fileContent = fs.readFileSync(req.file.path);
         const bucketName = await getParameterValue("MODEL_S3_BUCKET");
@@ -269,7 +269,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 });
 
 //change param so lambda can work
-app.post('/changeWorkingBucketParam', async (req, res) => {
+api.post('/changeWorkingBucketParam', async (req, res) => {
     const paramName = req.body.paramName;
     const bucketName = req.body.bucketName;
     try {
@@ -291,7 +291,7 @@ app.post('/changeWorkingBucketParam', async (req, res) => {
 });
 
 //change bg of html
-app.post('/uploadBackground', upload.single('file'), async (req, res) => {
+api.post('/uploadBackground', upload.single('file'), async (req, res) => {
     if (req.file) {
         const fileContent = fs.readFileSync(req.file.path);
         const bucketName = await getParameterValue("MODEL_S3_BUCKET");
@@ -315,6 +315,8 @@ app.post('/uploadBackground', upload.single('file'), async (req, res) => {
         res.status(400).json({ message: 'File upload failed.' });
     }
 });
+
+export const handler = serverless(api);
 
 
 

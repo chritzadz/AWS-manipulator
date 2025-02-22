@@ -18,12 +18,17 @@
   },
   "homepage": "https://github.com/chritzadz/AWS-manipulator#readme",
   "dependencies": {
+    "@netlify/functions": "^3.0.0",
+    "@types/express": "^5.0.0",
     "aws-sdk": "^2.1692.0",
     "axios": "^1.7.9",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "netlify-cli": "^18.1.0",
+    "netlify-lambda": "^2.0.16",
+    "serverless-http": "^3.2.0"
   }
 }
