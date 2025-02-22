@@ -43,13 +43,13 @@ const uploadViewer = async (bucketName) => {
     await createFolder(bucketName, 'viewer/');
     await createFolder(bucketName, 'viewer/background/');
     await createFolder(bucketName, 'viewer/models/');
-    await uploadFile(bucketName, './viewer/data.csv', 'viewer/data.csv');
-    await uploadFile(bucketName, './viewer/index.html', 'index.html');
-    await uploadFile(bucketName, './viewer/main.js', 'viewer/main.js');
-    await uploadFile(bucketName, './viewer/style.css', 'viewer/style.css');
+    await uploadFile(bucketName, './viewer/data.csv', 'viewer/data.csv', 'text/csv');
+    await uploadFile(bucketName, './viewer/index.html', 'index.html', 'text/html');
+    await uploadFile(bucketName, './viewer/main.js', 'viewer/main.js', 'application/javascript');
+    await uploadFile(bucketName, './viewer/style.css', 'viewer/style.css', 'text/css');
 };
 
-const createFolder = async (bucketName, folderPath) => {
+const createFolder = async (bucketName, folderPath, contentType) => {
     await s3.putObject({
         Bucket: bucketName,
         Key: folderPath,
@@ -57,12 +57,14 @@ const createFolder = async (bucketName, folderPath) => {
     }).promise();
 }
 
-const uploadFile = async (bucketName, filePath, s3key) => {
+const uploadFile = async (bucketName, filePath, s3key, contentType) => {
     const fileContent = fs.readFileSync(filePath);
     await s3.putObject({
         Bucket: bucketName,
         Key: s3key,
-        Body: fileContent
+        Body: fileContent,
+        ContentType: contentType,
+        ACL: 'public-read'
     }).promise();
 }
 
@@ -209,6 +211,18 @@ app.post('/createBucket', async (req, res) => {
             }
         };
         await s3.putBucketWebsite(allowStaticHostingParams).promise();
+
+        const deforceOwnership = {
+            Bucket: bucketName,
+            OwnershipControls: {
+                Rules: [
+                    {
+                    ObjectOwnership: 'BucketOwnerPreferred' // or 'ObjectOwnerPreferred'
+                    }
+                ]
+            }
+        };
+        await s3.putBucketOwnershipControls(deforceOwnership).promise();
 
         //upload viewer template
         uploadViewer(bucketName);
