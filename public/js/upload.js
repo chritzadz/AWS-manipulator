@@ -4,7 +4,7 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
     const messageDiv = document.getElementById('message');
     messageDiv.textContent = 'Uploading...';
 
-    fetch('upload', {
+    fetch('api/upload', {
         method: 'POST',
         body: formData
     })
@@ -24,7 +24,7 @@ document.getElementById('uploadBgForm').addEventListener('submit', function(even
     const messageDiv = document.getElementById('message');
     messageDiv.textContent = 'Uploading...';
 
-    fetch('uploadBackground', {
+    fetch('api/uploadBackground', {
         method: 'POST',
         body: formData
     })

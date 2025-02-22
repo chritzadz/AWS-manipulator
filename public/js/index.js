@@ -1,5 +1,5 @@
 function fetchBuckets() {
-    fetch('getBucketList')
+    fetch('api/getBucketList')
         .then(response => response.json())
         .then(buckets => {
             console.log('Buckets:', buckets);
@@ -39,7 +39,7 @@ document.getElementById('chooseWorkingBucketForm').addEventListener('submit', fu
         paramName : "MODEL_S3_BUCKET"
     };
     
-    fetch('changeWorkingBucketParam', {
+    fetch('api/changeWorkingBucketParam', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
