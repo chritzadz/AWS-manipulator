@@ -6,7 +6,7 @@ document.getElementById('createBucketForm').addEventListener('submit', function(
 
     const data = {bucketName : bucketName};
 
-    fetch('api/createBucket', {
+    fetch('createBucket', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

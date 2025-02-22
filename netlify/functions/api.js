@@ -7,7 +7,11 @@ import axios from 'axios';
 import crypto from 'crypto';
 import express, { Router } from 'express';
 
-api.use(cors());
+const router = Router();
+const app = express();
+app.use(cors());
+app.use(bodyParser.json);
+
 require('dotenv').config();
 
 AWS.config.update({
@@ -125,7 +129,7 @@ ROUTES
 */
 
 // get list of existing bucket
-api.get('/getBucketList', (req, res) => {
+router.get('/getBucketList', (req, res) => {
     s3.listBuckets((err, data) => {
         if (err) {
             return res.status(500).json({ error: err.message });
@@ -136,7 +140,7 @@ api.get('/getBucketList', (req, res) => {
 });
 
 //create new s3
-api.post('/createBucket', async (req, res) => {
+router.post('/createBucket', async (req, res) => {
     console.log("bucket_name: " + req.body.bucketName);
     const bucketName = req.body.bucketName;
     if (!bucketName) {
@@ -230,7 +234,7 @@ api.post('/createBucket', async (req, res) => {
 });
 
 // .glb file endpoint
-api.post('/upload', upload.single('file'), async (req, res) => {
+router.post('/upload', upload.single('file'), async (req, res) => {
     if (req.file) {
         const fileContent = fs.readFileSync(req.file.path);
         const bucketName = await getParameterValue("MODEL_S3_BUCKET");
@@ -264,7 +268,7 @@ api.post('/upload', upload.single('file'), async (req, res) => {
 });
 
 //change param so lambda can work
-api.post('/changeWorkingBucketParam', async (req, res) => {
+router.post('/changeWorkingBucketParam', async (req, res) => {
     const paramName = req.body.paramName;
     const bucketName = req.body.bucketName;
     try {
@@ -286,7 +290,7 @@ api.post('/changeWorkingBucketParam', async (req, res) => {
 });
 
 //change bg of html
-api.post('/uploadBackground', upload.single('file'), async (req, res) => {
+router.post('/uploadBackground', upload.single('file'), async (req, res) => {
     if (req.file) {
         const fileContent = fs.readFileSync(req.file.path);
         const bucketName = await getParameterValue("MODEL_S3_BUCKET");
@@ -311,7 +315,8 @@ api.post('/uploadBackground', upload.single('file'), async (req, res) => {
     }
 });
 
-export const handler = serverless(api);
+app.use('/api/', router)
+export const handler = serverless(app);
 
 
 
