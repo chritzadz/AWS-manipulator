@@ -202,6 +202,14 @@ app.post('/createBucket', async (req, res) => {
             CORSConfiguration: corsConfiguration
         }).promise();
 
+        const allowStaticHostingParams = {
+            Bucket: bucketName,
+            WebsiteConfiguration: {
+                IndexDocument: { Suffix: 'index.html' }
+            }
+        };
+        await s3.putBucketWebsite(allowStaticHostingParams).promise();
+
         //upload viewer template
         uploadViewer(bucketName);
 
