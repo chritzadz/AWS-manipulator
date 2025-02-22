@@ -2,7 +2,6 @@ import express, { Router } from "express";
 import serverless from "serverless-http";
 
 const AWS = require('aws-sdk');
-const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
