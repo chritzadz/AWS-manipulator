@@ -57,3 +57,10 @@ button:hover {
     margin-top: 20px;
     font-size: 1.2em;
 }
+
+.wrapper {
+    display: flex;
+    flex-direction: column; /* Stacks elements vertically */
+    align-items: center;
+    width: 100%;
+}

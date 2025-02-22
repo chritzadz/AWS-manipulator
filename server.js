@@ -273,11 +273,11 @@ app.post('/changeWorkingBucketParam', async (req, res) => {
 app.post('/uploadBackground', upload.single('file'), async (req, res) => {
     if (req.file) {
         const fileContent = fs.readFileSync(req.file.path);
-        const bucketName = getParameterValue("MODEL_S3_BUCKET");
+        const bucketName = await getParameterValue("MODEL_S3_BUCKET");
 
         const params = {
             Bucket: bucketName,
-            Key: `viewer/background/${req.file.originalname}`,
+            Key: `viewer/background/cyberport.jpg`,
             Body: fileContent,
             ContentType: 'image/jpeg',
         };
