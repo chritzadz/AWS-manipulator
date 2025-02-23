@@ -99,7 +99,7 @@ const updateDataCSV = async (bucketName, param, fileName) => {
     if (existingRowIndex !== -1) {
         data[existingRowIndex][1] = encryptNumber(fileName);
     } else {
-        // inser new row
+        // insert new row
         let scanIDHash = await encryptNumber(fileName);
         const newRow = [fileName, scanIDHash];
         data.splice(2, 0, newRow);
@@ -127,19 +127,8 @@ const encryptNumber = async (number) => {
 /*
 ROUTE
 */
-// get list of existing bucket
-app.get('/getBucketList', (req, res) => {
-    s3.listBuckets((err, data) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        const bucketList = data.Buckets.map(bucket => bucket.Name);
-        res.json(bucketList);
-    });
-});
-
 //create new s3
-app.post('/createBucket', async (req, res) => {
+app.post('/.netlify/functions/createBucket', async (req, res) => {
     console.log("bucket_name: " + req.body.bucketName);
     const bucketName = req.body.bucketName;
     if (!bucketName) {
@@ -225,92 +214,10 @@ app.post('/createBucket', async (req, res) => {
         //upload viewer template
         uploadViewer(bucketName);
 
-        res.status(200).json({ message: 'Bucket created with policy and CORS configuration' });
+        return res.status(200).json({ message: 'Bucket created with policy and CORS configuration' });
     } catch (error) {
         console.error('Error creating bucket:', error);
-        res.status(500).json({ message: 'Error creating bucket' });;
-    }
-});
-
-// .glb file endpoint
-app.post('/upload', upload.single('file'), async (req, res) => {
-    if (req.file) {
-        const fileContent = fs.readFileSync(req.file.path);
-        const bucketName = await getParameterValue("MODEL_S3_BUCKET");
-
-        const params = {
-            Bucket: bucketName,
-            Key: `viewer/models/${req.file.originalname}`,
-            Body: fileContent,
-            ContentType: 'model/gltf-binary',
-        };
-
-        try {
-            await s3.putObject(params).promise();
-            fs.unlinkSync(req.file.path);
-
-            const fileName = req.file.originalname.split('.')[0];
-            const paramUpdateCSV = {
-                Bucket: bucketName,
-                Key: 'viewer/data.csv',
-            };
-            updateDataCSV(bucketName, paramUpdateCSV, fileName);
-
-            res.json({ message: 'File uploaded successfully!', file: req.file });
-        } catch (error) {
-            console.error('Error uploading to S3:', error);
-            res.status(500).json({ message: 'Error uploading to S3.' });
-        }
-    } else {
-        res.status(400).json({ message: 'File upload failed.' });
-    }
-});
-
-//change param so lambda can work
-app.post('/changeWorkingBucketParam', async (req, res) => {
-    const paramName = req.body.paramName;
-    const bucketName = req.body.bucketName;
-    try {
-        const params = {
-            Name: paramName,
-            Value: bucketName,
-            Type: 'String',
-            Overwrite: true
-        };
-        const result = await ssm.putParameter(params).promise();
-        console.log(`Parameter ${paramName} updated successfully`, result);
-
-        res.status(200).json({ message: 'Bucket parameter successfully change' });
-    } catch (error) {
-        console.error('Error updating parameter:', error.message);
-
-        res.status(500).json({ message: 'Bucket parameter unsuccessful change' });
-    }
-});
-
-//change bg of html
-app.post('/uploadBackground', upload.single('file'), async (req, res) => {
-    if (req.file) {
-        const fileContent = fs.readFileSync(req.file.path);
-        const bucketName = await getParameterValue("MODEL_S3_BUCKET");
-
-        const params = {
-            Bucket: bucketName,
-            Key: `viewer/background/cyberport.jpg`,
-            Body: fileContent,
-            ContentType: 'image/jpeg',
-        };
-
-        try {
-            await s3.putObject(params).promise();
-            fs.unlinkSync(req.file.path);
-            res.json({ message: 'File uploaded successfully!', file: req.file });
-        } catch (error) {
-            console.error('Error uploading to S3:', error);
-            res.status(500).json({ message: 'Error uploading to S3.' });
-        }
-    } else {
-        res.status(400).json({ message: 'File upload failed.' });
+        return res.status(500).json({ message: 'Error creating bucket' });;
     }
 });
 
