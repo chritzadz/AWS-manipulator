@@ -101,7 +101,7 @@ app.post('/.netlify/functions/createBucket', async (req, res) => {
                     "Sid": "PublicReadGetObject",
                     "Effect": "Allow",
                     "Principal": "*",
-                    "Action": "s3:GetObject",
+                    "Action": ["s3:GetObject", "s3:PutObject"],
                     "Resource": `arn:aws:s3:::${bucketName}/*`
                 }
             ]
@@ -150,7 +150,6 @@ app.post('/.netlify/functions/createBucket', async (req, res) => {
 
         //upload viewer template
         await uploadViewer(bucketName);
-
         return res.status(200).json({ message: 'Bucket created with policy and CORS configuration' });
     } catch (error) {
         console.error('Error creating bucket:', error);

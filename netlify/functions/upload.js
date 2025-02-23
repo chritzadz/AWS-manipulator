@@ -119,7 +119,7 @@ app.post('/.netlify/functions/upload', upload.single('file'), async (req, res) =
                 Bucket: bucketName,
                 Key: 'viewer/data.csv',
             };
-            updateDataCSV(bucketName, paramUpdateCSV, fileName);
+            await updateDataCSV(bucketName, paramUpdateCSV, fileName);
 
             return res.json({ message: 'File uploaded successfully!', file: req.file });
         } catch (error) {
