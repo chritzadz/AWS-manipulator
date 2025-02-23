@@ -99,10 +99,12 @@ const encryptNumber = async (number) => {
 ROUTE
 */
 app.post('/.netlify/functions/uploadModel', upload.single('file'), async (req, res) => {
+    console.log(req.file.originalname);
+    console.log("File info:", req.file);
     if (req.file) {
         const fileContent = fs.readFileSync(req.file.path);
         const bucketName = await getParameterValue("MODEL_S3_BUCKET");
-        console.log("req.file.originalname");
+        console.log(req.file.originalname);
 
         const params = {
             Bucket: bucketName,
