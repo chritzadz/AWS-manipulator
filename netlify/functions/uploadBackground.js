@@ -19,6 +19,9 @@ AWS.config.update({
     region: process.env.REGION
 });
 
+const s3 = new AWS.S3();
+const ssm = new AWS.SSM();
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, '/tmp/');
@@ -30,42 +33,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-const s3 = new AWS.S3();
-const ssm = new AWS.SSM();
 
 /*
 HELPER FUNCTION
 */
-
-const uploadViewer = async (bucketName) => {
-    //create by order
-    await createFolder(bucketName, 'viewer/');
-    await createFolder(bucketName, 'viewer/background/');
-    await createFolder(bucketName, 'viewer/models/');
-    await uploadFile(bucketName, './viewer/data.csv', 'viewer/data.csv', 'text/csv');
-    await uploadFile(bucketName, './viewer/index.html', 'index.html', 'text/html');
-    await uploadFile(bucketName, './viewer/main.js', 'viewer/main.js', 'application/javascript');
-    await uploadFile(bucketName, './viewer/style.css', 'viewer/style.css', 'text/css');
-};
-
-const createFolder = async (bucketName, folderPath, contentType) => {
-    await s3.putObject({
-        Bucket: bucketName,
-        Key: folderPath,
-        Body: ''
-    }).promise();
-}
-
-const uploadFile = async (bucketName, filePath, s3key, contentType) => {
-    const fileContent = fs.readFileSync(filePath);
-    await s3.putObject({
-        Bucket: bucketName,
-        Key: s3key,
-        Body: fileContent,
-        ContentType: contentType,
-        ACL: 'public-read'
-    }).promise();
-}
 
 const getParameterValue = async (paramName) => {
     try {
