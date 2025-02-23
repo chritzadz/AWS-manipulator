@@ -22,6 +22,17 @@ AWS.config.update({
 const s3 = new AWS.S3();
 const ssm = new AWS.SSM();
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, '/tmp/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage });
+
 
 /*
 HELPER FUNCTION
@@ -91,6 +102,7 @@ app.post('/.netlify/functions/uploadModel', upload.single('file'), async (req, r
     if (req.file) {
         const fileContent = fs.readFileSync(req.file.path);
         const bucketName = await getParameterValue("MODEL_S3_BUCKET");
+        console.log("req.file.originalname");
 
         const params = {
             Bucket: bucketName,
@@ -103,11 +115,11 @@ app.post('/.netlify/functions/uploadModel', upload.single('file'), async (req, r
             await s3.putObject(params).promise();
             fs.unlinkSync(req.file.path);
 
-            const fileName = req.file.originalname.split('.')[0];
-            const paramUpdateCSV = {
-                Bucket: bucketName,
-                Key: 'viewer/data.csv',
-            };
+            // const fileName = req.file.originalname.split('.')[0];
+            // const paramUpdateCSV = {
+            //     Bucket: bucketName,
+            //     Key: 'viewer/data.csv',
+            // };
             //await updateDataCSV(bucketName, paramUpdateCSV, fileName);
 
             return res.json({ message: 'File uploaded successfully!', file: req.file });
