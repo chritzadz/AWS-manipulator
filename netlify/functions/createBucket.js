@@ -149,7 +149,7 @@ app.post('/.netlify/functions/createBucket', async (req, res) => {
         await s3.putBucketOwnershipControls(deforceOwnership).promise();
 
         //upload viewer template
-        uploadViewer(bucketName);
+        await uploadViewer(bucketName);
 
         return res.status(200).json({ message: 'Bucket created with policy and CORS configuration' });
     } catch (error) {
