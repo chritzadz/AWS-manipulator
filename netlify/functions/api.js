@@ -1,3 +1,5 @@
+import express from "express";
+import ServerlessHttp from "serverless-http";
 import AWS from 'aws-sdk';
 import multer from 'multer';
 import path from 'path';
@@ -5,14 +7,11 @@ import fs from 'fs';
 import cors from 'cors';
 import axios from 'axios';
 import crypto from 'crypto';
-import express, { Router } from 'express';
 
-const router = Router();
 const app = express();
 app.use(cors());
-app.use(bodyParser.json);
-
-require('dotenv').config();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 AWS.config.update({
     accessKeyId: process.env.ACCESS_KEY,
@@ -20,21 +19,22 @@ AWS.config.update({
     region: process.env.REGION
 });
 
-const s3 = new AWS.S3();
-const ssm = new AWS.SSM();
-
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '/tmp/'); //tmp from netlify
+        cb(null, '/tmp/');
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname));
     }
 });
+
 const upload = multer({ storage });
 
+const s3 = new AWS.S3();
+const ssm = new AWS.SSM();
+
 /*
-This part of the code are used as helper function
+HELPER FUNCTION
 */
 
 const uploadViewer = async (bucketName) => {
@@ -44,7 +44,7 @@ const uploadViewer = async (bucketName) => {
     await createFolder(bucketName, 'viewer/models/');
     await uploadFile(bucketName, './viewer/data.csv', 'viewer/data.csv', 'text/csv');
     await uploadFile(bucketName, './viewer/index.html', 'index.html', 'text/html');
-    await uploadFile(bucketName, './viewer/main.js', 'viewer/main.js', 'apilication/javascript');
+    await uploadFile(bucketName, './viewer/main.js', 'viewer/main.js', 'application/javascript');
     await uploadFile(bucketName, './viewer/style.css', 'viewer/style.css', 'text/css');
 };
 
@@ -124,12 +124,11 @@ const encryptNumber = async (number) => {
     return hash.slice(0, 12);
 };
 
-/* 
-ROUTES
+/*
+ROUTE
 */
-
 // get list of existing bucket
-router.get('/getBucketList', (req, res) => {
+app.get('.netlify/functions/getBucketList', (req, res) => {
     s3.listBuckets((err, data) => {
         if (err) {
             return res.status(500).json({ error: err.message });
@@ -140,7 +139,7 @@ router.get('/getBucketList', (req, res) => {
 });
 
 //create new s3
-router.post('/createBucket', async (req, res) => {
+app.post('.netlify/functions/createBucket', async (req, res) => {
     console.log("bucket_name: " + req.body.bucketName);
     const bucketName = req.body.bucketName;
     if (!bucketName) {
@@ -234,7 +233,7 @@ router.post('/createBucket', async (req, res) => {
 });
 
 // .glb file endpoint
-router.post('/upload', upload.single('file'), async (req, res) => {
+app.post('.netlify/functions/upload', upload.single('file'), async (req, res) => {
     if (req.file) {
         const fileContent = fs.readFileSync(req.file.path);
         const bucketName = await getParameterValue("MODEL_S3_BUCKET");
@@ -268,7 +267,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 });
 
 //change param so lambda can work
-router.post('/changeWorkingBucketParam', async (req, res) => {
+app.post('.netlify/functions/changeWorkingBucketParam', async (req, res) => {
     const paramName = req.body.paramName;
     const bucketName = req.body.bucketName;
     try {
@@ -290,7 +289,7 @@ router.post('/changeWorkingBucketParam', async (req, res) => {
 });
 
 //change bg of html
-router.post('/uploadBackground', upload.single('file'), async (req, res) => {
+app.post('.netlify/functions/uploadBackground', upload.single('file'), async (req, res) => {
     if (req.file) {
         const fileContent = fs.readFileSync(req.file.path);
         const bucketName = await getParameterValue("MODEL_S3_BUCKET");
@@ -315,9 +314,8 @@ router.post('/uploadBackground', upload.single('file'), async (req, res) => {
     }
 });
 
-app.use('/api/', router)
-export const handler = serverless(app);
-
-
-
-
+const handler = ServerlessHttp(app);
+module.exports.handler = async(event, context) => {
+    const result = await handler(event, context);
+    return result;
+};
