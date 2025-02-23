@@ -141,11 +141,11 @@ app.post('/.netlify/functions/changeWorkingBucketParam', async (req, res) => {
         const result = await ssm.putParameter(params).promise();
         console.log(`Parameter ${paramName} updated successfully`, result);
 
-        res.status(200).json({ message: 'Bucket parameter successfully change' });
+        return res.status(200).json({ message: 'Bucket parameter successfully change' });
     } catch (error) {
         console.error('Error updating parameter:', error.message);
 
-        res.status(500).json({ message: 'Bucket parameter unsuccessful change' });
+        return res.status(500).json({ message: 'Bucket parameter unsuccessful change' });
     }
 });
 

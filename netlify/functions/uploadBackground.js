@@ -143,13 +143,15 @@ app.post('/.netlify/functions/uploadBackground', upload.single('file'), async (r
         try {
             await s3.putObject(params).promise();
             fs.unlinkSync(req.file.path);
-            res.json({ message: 'File uploaded successfully!', file: req.file });
+            return res.json({ message: 'File uploaded successfully!', file: req.file });
         } catch (error) {
             console.error('Error uploading to S3:', error);
             res.status(500).json({ message: 'Error uploading to S3.' });
+            return res.json({ message: 'Error uploading to S3.' });
         }
     } else {
         res.status(400).json({ message: 'File upload failed.' });
+        return res.json({ message: 'File upload failed.' });
     }
 });
 

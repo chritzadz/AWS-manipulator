@@ -150,13 +150,15 @@ app.post('/.netlify/functions/upload', upload.single('file'), async (req, res) =
             };
             updateDataCSV(bucketName, paramUpdateCSV, fileName);
 
-            res.json({ message: 'File uploaded successfully!', file: req.file });
+            return res.json({ message: 'File uploaded successfully!', file: req.file });
         } catch (error) {
             console.error('Error uploading to S3:', error);
             res.status(500).json({ message: 'Error uploading to S3.' });
+            return res.json({ message: 'Error uploading to S3.' });
         }
     } else {
         res.status(400).json({ message: 'File upload failed.' });
+        return res.json({ message: 'File upload failed.' });
     }
 });
 
