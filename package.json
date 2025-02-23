@@ -4,7 +4,9 @@
   "description": "later...",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js",
+    "dev": "netlify dev"
   },
   "repository": {
     "type": "git",
@@ -29,6 +31,7 @@
     "multer": "^1.4.5-lts.1",
     "netlify-cli": "^18.1.0",
     "netlify-lambda": "^2.0.16",
-    "serverless-http": "^3.2.0"
+    "serverless-http": "^3.2.0",
+    "webpack": "^5.98.0"
   }
 }
