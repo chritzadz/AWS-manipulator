@@ -128,7 +128,7 @@ const encryptNumber = async (number) => {
 ROUTE
 */
 // get list of existing bucket
-app.get('.netlify/functions/getBucketList', (req, res) => {
+app.get('/getBucketList', (req, res) => {
     s3.listBuckets((err, data) => {
         if (err) {
             return res.status(500).json({ error: err.message });
@@ -139,7 +139,7 @@ app.get('.netlify/functions/getBucketList', (req, res) => {
 });
 
 //create new s3
-app.post('.netlify/functions/createBucket', async (req, res) => {
+app.post('/createBucket', async (req, res) => {
     console.log("bucket_name: " + req.body.bucketName);
     const bucketName = req.body.bucketName;
     if (!bucketName) {
@@ -233,7 +233,7 @@ app.post('.netlify/functions/createBucket', async (req, res) => {
 });
 
 // .glb file endpoint
-app.post('.netlify/functions/upload', upload.single('file'), async (req, res) => {
+app.post('/upload', upload.single('file'), async (req, res) => {
     if (req.file) {
         const fileContent = fs.readFileSync(req.file.path);
         const bucketName = await getParameterValue("MODEL_S3_BUCKET");
@@ -267,7 +267,7 @@ app.post('.netlify/functions/upload', upload.single('file'), async (req, res) =>
 });
 
 //change param so lambda can work
-app.post('.netlify/functions/changeWorkingBucketParam', async (req, res) => {
+app.post('/changeWorkingBucketParam', async (req, res) => {
     const paramName = req.body.paramName;
     const bucketName = req.body.bucketName;
     try {
@@ -289,7 +289,7 @@ app.post('.netlify/functions/changeWorkingBucketParam', async (req, res) => {
 });
 
 //change bg of html
-app.post('.netlify/functions/uploadBackground', upload.single('file'), async (req, res) => {
+app.post('/uploadBackground', upload.single('file'), async (req, res) => {
     if (req.file) {
         const fileContent = fs.readFileSync(req.file.path);
         const bucketName = await getParameterValue("MODEL_S3_BUCKET");
