@@ -4,7 +4,7 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
     const messageDiv = document.getElementById('message');
     messageDiv.textContent = 'Uploading...';
 
-    fetch('https://test-front-aws.netlify.app/.netlify/functions/upload', {
+    fetch('https://aws-manipulator.netlify.app/.netlify/functions/upload', {
         method: 'POST',
         body: formData
     })
@@ -24,7 +24,7 @@ document.getElementById('uploadBgForm').addEventListener('submit', function(even
     const messageDiv = document.getElementById('message');
     messageDiv.textContent = 'Uploading...';
 
-    fetch('https://test-front-aws.netlify.app/.netlify/functions/uploadBackground', {
+    fetch('https://aws-manipulator.netlify.app/.netlify/functions/uploadBackground', {
         method: 'POST',
         body: formData
     })

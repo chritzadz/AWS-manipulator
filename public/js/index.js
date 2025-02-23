@@ -1,5 +1,5 @@
 function fetchBuckets() {
-    fetch('https://test-front-aws.netlify.app/.netlify/functions/getBucketList')
+    fetch('https://aws-manipulator.netlify.app/.netlify/functions/getBucketList')
         .then(response => response.json())
         .then(buckets => {
             console.log('Buckets:', buckets);
@@ -39,7 +39,7 @@ document.getElementById('chooseWorkingBucketForm').addEventListener('submit', fu
         paramName : "MODEL_S3_BUCKET"
     };
     
-    fetch('https://test-front-aws.netlify.app/.netlify/functions/changeWorkingBucketParam', {
+    fetch('https://aws-manipulator.netlify.app/.netlify/functions/changeWorkingBucketParam', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

@@ -6,7 +6,7 @@ document.getElementById('createBucketForm').addEventListener('submit', function(
 
     const data = {bucketName : bucketName};
 
-    fetch('https://test-front-aws.netlify.app/.netlify/functions/createBucket', {
+    fetch('https://aws-manipulator.netlify.app/.netlify/functions/createBucket', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
