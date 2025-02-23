@@ -19,10 +19,10 @@ AWS.config.update({
     region: process.env.REGION
 });
 
-const index_file = fs.readFileSync(path.join(__dirname, '../viewer/data.csv'));
-const javascript_file = fs.readFileSync(path.join(__dirname, '../viewer/index.html'));
-const css_file = fs.readFileSync(path.join(__dirname, '../viewer/main.js'));
-const data_file =fs.readFileSync(path.join(__dirname, '../viewer/style.css'));
+const index_file = fs.readFileSync(path.join(__dirname, 'viewer/data.csv'));
+const javascript_file = fs.readFileSync(path.join(__dirname, 'viewer/index.html'));
+const css_file = fs.readFileSync(path.join(__dirname, 'viewer/main.js'));
+const data_file =fs.readFileSync(path.join(__dirname, 'viewer/style.css'));
 
 const s3 = new AWS.S3();
 const ssm = new AWS.SSM();
