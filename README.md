@@ -8,21 +8,17 @@ The program is configured to be deploy through netlify
 
 # Set up
 ## Deploying in netlify
+1. fork the project to your own remote repository
+2. connect to netlify and connect project to netlify (refer to: https://www.netlify.com/blog/2016/09/29/a-step-by-step-guide-deploying-on-netlify/)
+3. website is available for use
+
 
 ## Running locally (via Express app)
+1. deploy a node project
+2. in terminal, node local_api.js
 
-# Deploying in netlify
-
-
-
-
-
-
-
-
-
-
-
+# Requirement
+1. AWS account with IAM role (with administrator access), and generate secret key and access key
 
 
 # Reference
