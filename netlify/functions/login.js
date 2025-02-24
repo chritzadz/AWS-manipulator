@@ -7,6 +7,7 @@ import fs from 'fs';
 import cors from 'cors';
 import axios from 'axios';
 import crypto from 'crypto';
+import { verifyToken } from './auth';
 import jwt from 'jsonwebtoken';
 
 const SECRET_JWT_KEY = process.env.JWT_SECRET;
