@@ -7,6 +7,7 @@ import fs from 'fs';
 import cors from 'cors';
 import axios from 'axios';
 import crypto from 'crypto';
+import { verifyToken } from './auth';
 
 const app = express();
 app.use(cors());
@@ -30,7 +31,7 @@ HELPER FUNCTION
 ROUTE
 */
 // get list of existing bucket
-app.post('/.netlify/functions/changeWorkingBucketParam', async (req, res) => {
+app.post('/.netlify/functions/changeWorkingBucketParam', verifyToken, async (req, res) => {
     const paramName = req.body.paramName;
     const bucketName = req.body.bucketName;
     try {

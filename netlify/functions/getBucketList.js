@@ -7,6 +7,7 @@ import fs from 'fs';
 import cors from 'cors';
 import axios from 'axios';
 import crypto from 'crypto';
+import { verifyToken } from './auth';
 
 const app = express();
 app.use(cors());
@@ -31,7 +32,7 @@ HELPER FUNCTION
 ROUTE
 */
 // get list of existing bucket
-app.get('/.netlify/functions/getBucketList', (req, res) => {
+app.get('/.netlify/functions/getBucketList', verifyToken, (req, res) => {
     s3.listBuckets((err, data) => {
         if (err) {
             return res.status(500).json({ error: err.message });

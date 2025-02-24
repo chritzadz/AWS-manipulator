@@ -7,6 +7,7 @@ import fs from 'fs';
 import cors from 'cors';
 import axios from 'axios';
 import crypto from 'crypto';
+import { verifyToken } from './auth';
 
 const app = express();
 app.use(cors());
@@ -65,7 +66,7 @@ const uploadFile = async (bucketName, fileContent, s3key, contentType) => {
 ROUTE
 */
 //create new s3
-app.post('/.netlify/functions/createBucket', async (req, res) => {
+app.post('/.netlify/functions/createBucket', verifyToken, async (req, res) => {
     console.log("bucket_name: " + req.body.bucketName);
     const bucketName = req.body.bucketName;
     if (!bucketName) {

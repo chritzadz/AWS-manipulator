@@ -48,6 +48,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    localStorage.setItem("jwt_token", data.token);
                     messageDiv.textContent = "Login successful";
                     window.location.href = "https://aws-manipulator.netlify.app/home";
                 } else {

@@ -7,6 +7,9 @@ import fs from 'fs';
 import cors from 'cors';
 import axios from 'axios';
 import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+
+const SECRET_JWT_KEY = process.env.JWT_SECRET;
 
 const app = express();
 app.use(cors());
@@ -23,29 +26,20 @@ AWS.config.update({
 ROUTE
 */
 //validate credentials
-app.post('/.netlify/functions/login', async (req, res) => {
-    const {accessKey, secretKey} = req.body;
+app.post('/.netlify/functions/login', verifyToken, async (req, res) => {
+    const { accessKey, secretKey } = req.body;
 
     if (!accessKey || !secretKey) {
         return res.status(400).json({ success: false, message: "Access and Secret keys are required" });
     }
 
-    AWS.config.update({
-        accessKeyId: accessKey,
-        secretAccessKey: secretKey,
-        region: process.env.REGION
-    });
+    if (accessKey !== process.env.ACCESS_KEY || secretKey !== process.env.SECRET_KEY) {
+        return res.status(403).json({ success: false, message: "Authentication failed" });
+    }
 
-    const s3 = new AWS.S3();
-    
-    s3.listBuckets((err, data) => {
-        if (err) {
-            return res.status(403).json({ success: false, message: "Authentication failed" });
-        } else {
-            return res.json({ success: true, message: "Login successful!" });
-        }
-    });
+    const token = jwt.sign({ accessKey }, SECRET_JWT_KEY, { expiresIn: '1h' });
 
+    return res.json({ success: true, message: "Login successful!", token });
 });
 
 

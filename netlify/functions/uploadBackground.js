@@ -5,8 +5,8 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import cors from 'cors';
-import axios from 'axios';
-import crypto from 'crypto';
+import { verifyToken } from './auth';
+
 
 const app = express();
 app.use(cors());
@@ -60,8 +60,7 @@ const getParameterValue = async (paramName) => {
 /*
 ROUTE
 */
-//change bg of html
-app.post('/.netlify/functions/uploadBackground', upload.single('file'), async (req, res) => {
+app.post('/.netlify/functions/uploadBackground', verifyToken, upload.single('file'), async (req, res) => {
     if (req.file) {
         const fileContent = fs.readFileSync(req.file.path);
         const bucketName = await getParameterValue("MODEL_S3_BUCKET");

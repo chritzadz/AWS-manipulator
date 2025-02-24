@@ -7,6 +7,7 @@ import fs from 'fs';
 import cors from 'cors';
 import axios from 'axios';
 import crypto from 'crypto';
+import { verifyToken } from './auth';
 
 const app = express();
 app.use(cors());
@@ -98,7 +99,7 @@ const encryptNumber = async (number) => {
 /*
 ROUTE
 */
-app.post('/.netlify/functions/uploadModel', upload.single('file'), async (req, res) => {
+app.post('/.netlify/functions/uploadModel', upload.single('file'), verifyToken, async (req, res) => {
     try {
         const { fileName, fileType } = req.body;
         if (!fileName || !fileType) {
