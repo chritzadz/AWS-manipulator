@@ -1,5 +1,8 @@
 function fetchBuckets() {
-    fetch('https://aws-manipulator.netlify.app/.netlify/functions/getBucketList')
+    const token = localStorage.getItem("jwt_token");
+    
+    if (token){
+        fetch('https://aws-manipulator.netlify.app/.netlify/functions/getBucketList')
         .then(response => response.json())
         .then(buckets => {
             console.log('Buckets:', buckets);
@@ -8,6 +11,10 @@ function fetchBuckets() {
         .catch(error => {
             console.error('Error fetching buckets:', error);
         });
+    }
+    else{
+        alert("Need to Log in first!");
+    }
 }
 
 function displayBuckets(buckets) {
@@ -38,27 +45,33 @@ document.getElementById('chooseWorkingBucketForm').addEventListener('submit', fu
         bucketName : bucketName,
         paramName : "MODEL_S3_BUCKET"
     };
-    
-    fetch('https://aws-manipulator.netlify.app/.netlify/functions/changeWorkingBucketParam', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        messageDiv.textContent = data.message;
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        messageDiv.textContent = 'An error occurred while changing the bucket parameter.';
-    });
 
-    window.location.href = './upload.html';
+    const token = localStorage.getItem("jwt_token");
+    if (token){
+        fetch('https://aws-manipulator.netlify.app/.netlify/functions/changeWorkingBucketParam', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            messageDiv.textContent = data.message;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            messageDiv.textContent = 'An error occurred while changing the bucket parameter.';
+        });
+    
+        window.location.href = './upload.html';
+    }
+    else{
+        alert("You need to log in first!");
+    }
 });
