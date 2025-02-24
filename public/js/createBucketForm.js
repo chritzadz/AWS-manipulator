@@ -3,7 +3,7 @@ const token = localStorage.getItem("jwt_token");
 window.onload = () => {
     if (!token){
         alert("Need to Log in first!");
-        windows.location.href = './index.html'
+        window.location.href = './index.html'
     }
 };
 

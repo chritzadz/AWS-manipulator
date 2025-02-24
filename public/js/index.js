@@ -29,7 +29,7 @@ window.onload = () => {
     }
     else{
         alert("Need to Log in first!");
-        windows.location.href = './index.html'
+        window.location.href = './index.html'
     }
 };
 
