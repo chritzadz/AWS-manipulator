@@ -25,6 +25,6 @@ document.getElementById('createBucketForm').addEventListener('submit', function(
 
 document.getElementById('back2Index').addEventListener('click', function(event) {
     event.preventDefault();
-    window.location.href = './index.html';
+    window.location.href = './home.html';
 });
 

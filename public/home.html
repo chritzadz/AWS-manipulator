@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
+    <script type="module" src="js/index.js"></script>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div class="container">
+        <div class="createBucketContainer">
+            <h1>Choose Bucket</h1>
+            <ul id="bucketList"></ul>
+    
+            <button id="createBucketButton">Create Bucket</button>
+        </div>
+        <div class="chooseWorkingBucketContainer">
+            <form id="chooseWorkingBucketForm">
+                <label for="chooseWorkingBucketInput">Choose working bucket:</label><br>
+                <input type="text" id="chooseWorkingBucketInput" name="chooseWorkingBucketInput"><br>
+                <input type="submit" value="Go to working bucket">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
