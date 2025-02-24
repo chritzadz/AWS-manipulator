@@ -1,8 +1,7 @@
-window.onload = () => {
-    if (token){
+const token = localStorage.getItem("jwt_token");
 
-    }
-    else{
+window.onload = () => {
+    if (!token){
         alert("Need to Log in first!");
         windows.location.href = './index.html'
     }
@@ -17,28 +16,21 @@ document.getElementById('createBucketForm').addEventListener('submit', function(
 
     const data = {bucketName : bucketName};
 
-    const token = localStorage.getItem("jwt_token");
-
-    if (token){
-        fetch('https://aws-manipulator.netlify.app/.netlify/functions/createBucket', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(data => {
-            messageDiv.textContent = data.message;
-        })
-        .catch(error => {
-            messageDiv.textContent = 'Fail to create bucket. Please try again.';
-            console.error('Error:', error);
-        });
-    }
-    else{
-        alert("You need to log in first!");
-    }
+    fetch('https://aws-manipulator.netlify.app/.netlify/functions/createBucket', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        messageDiv.textContent = data.message;
+    })
+    .catch(error => {
+        messageDiv.textContent = 'Fail to create bucket. Please try again.';
+        console.error('Error:', error);
+    });
 });
 
 document.getElementById('back2Index').addEventListener('click', function(event) {

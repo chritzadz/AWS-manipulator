@@ -1,20 +1,13 @@
 function fetchBuckets() {
-    const token = localStorage.getItem("jwt_token");
-    
-    if (token){
-        fetch('https://aws-manipulator.netlify.app/.netlify/functions/getBucketList')
-        .then(response => response.json())
-        .then(buckets => {
-            console.log('Buckets:', buckets);
-            displayBuckets(buckets);
-        })
-        .catch(error => {
-            console.error('Error fetching buckets:', error);
-        });
-    }
-    else{
-        alert("Need to Log in first!");
-    }
+    fetch('https://aws-manipulator.netlify.app/.netlify/functions/getBucketList')
+    .then(response => response.json())
+    .then(buckets => {
+        console.log('Buckets:', buckets);
+        displayBuckets(buckets);
+    })
+    .catch(error => {
+        console.error('Error fetching buckets:', error);
+    });
 }
 
 function displayBuckets(buckets) {
@@ -27,6 +20,8 @@ function displayBuckets(buckets) {
         bucketListElement.appendChild(li);
     });
 }
+
+const token = localStorage.getItem("jwt_token");
 
 window.onload = () => {
     if (token){
