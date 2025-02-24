@@ -111,7 +111,7 @@ app.post('/.netlify/functions/uploadModel', upload.single('file'), async (req, r
             Bucket: bucketName,
             Key: `viewer/models/${fileName}`,
             ContentType: fileType,
-            Expires: 300 // URL expires in 5 minutes
+            Expires: 300
         };
 
         const uploadURL = await s3.getSignedUrlPromise("putObject", params);
@@ -127,39 +127,6 @@ app.post('/.netlify/functions/uploadModel', upload.single('file'), async (req, r
         console.error("Error generating pre-signed URL:", error);
         return res.status(500).json({ message: "Failed to generate pre-signed URL" });
     }
-    // if (req.file) {
-    //     const fileContent = fs.readFileSync(req.file.path);
-    //     const bucketName = await getParameterValue("MODEL_S3_BUCKET");
-    //     console.log(req.file.originalname);
-
-    //     const params = {
-    //         Bucket: bucketName,
-    //         Key: `viewer/models/${req.file.originalname}`,
-    //         Body: fileContent,
-    //         ContentType: 'model/gltf-binary',
-    //     };
-
-    //     try {
-    //         await s3.putObject(params).promise();
-    //         fs.unlinkSync(req.file.path);
-
-    //         const fileName = req.file.originalname.split('.')[0];
-    //         const paramUpdateCSV = {
-    //             Bucket: bucketName,
-    //             Key: 'viewer/data.csv',
-    //         };
-    //         await updateDataCSV(bucketName, paramUpdateCSV, fileName);
-
-    //         return res.json({ message: 'File uploaded successfully!', file: req.file });
-    //     } catch (error) {
-    //         console.error('Error uploading to S3:', error);
-    //         res.status(500).json({ message: 'Error uploading to S3.' });
-    //         return res.json({ message: 'Error uploading to S3.' });
-    //     }
-    // } else {
-    //     res.status(400).json({ message: 'File upload failed.' });
-    //     return res.json({ message: 'File upload failed.' });
-    // }
 });
 
 const handler = ServerlessHttp(app);

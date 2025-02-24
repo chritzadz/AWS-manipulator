@@ -5,9 +5,12 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
     const file = fileInput.files[0];
     messageDiv.textContent = 'Uploading...';
 
+    console.log(file.name);
+    console.log(file.type);
+
     fetch('https://aws-manipulator.netlify.app/.netlify/functions/uploadModel', {
         method: "POST",
-        body: JSON.stringify({ fileName: file.name, fileType: file.type }),
+        body: JSON.stringify({ fileName: file.name, fileType: "model/gtlf-binary" }),
         headers: { "Content-Type": "application/json" }
     })
     .then(response => {
@@ -22,12 +25,11 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
             throw new Error("No upload URL received.");
         }
 
-        // Step 2: Upload file to S3
-        messageDiv.textContent = "Uploading to S3...";
+        messageDiv.textContent = "Uploading...";
         return fetch(uploadURL, {
             method: "PUT",
             body: file,
-            headers: { "Content-Type": file.type }
+            headers: { "Content-Type": "model/gtlf-binary" }
         });
     })
     .then(uploadResponse => {
@@ -35,7 +37,6 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
             throw new Error("Upload to S3 failed.");
         }
 
-        // Success message
         messageDiv.textContent = "Upload complete!";
         console.log("File uploaded successfully!");
     })
@@ -43,21 +44,6 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
         messageDiv.textContent = `Error: ${error.message}`;
         console.error("Upload failed:", error);
     });
-
-    
-
-    // fetch('https://aws-manipulator.netlify.app/.netlify/functions/uploadModel', {
-    //     method: 'POST',
-    //     body: formData
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //     messageDiv.textContent = data.message;
-    // })
-    // .catch(error => {
-    //     messageDiv.textContent = 'Upload failed. Please try again.';
-    //     console.error('Error:', error);
-    // });
 });
 
 document.getElementById('uploadBgForm').addEventListener('submit', function(event) {
