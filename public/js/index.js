@@ -29,7 +29,13 @@ function displayBuckets(buckets) {
 }
 
 window.onload = () => {
-    fetchBuckets();
+    if (token){
+        fetchBuckets();
+    }
+    else{
+        alert("Need to Log in first!");
+        windows.location.href = './index.html'
+    }
 };
 
 document.getElementById('createBucketButton').addEventListener('click', function(event) {

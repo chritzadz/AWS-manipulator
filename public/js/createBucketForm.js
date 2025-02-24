@@ -1,3 +1,14 @@
+window.onload = () => {
+    if (token){
+
+    }
+    else{
+        alert("Need to Log in first!");
+        windows.location.href = './index.html'
+    }
+};
+
+
 document.getElementById('createBucketForm').addEventListener('submit', function(event) {
     event.preventDefault();
     const bucketName = document.getElementById('bucketName').value;

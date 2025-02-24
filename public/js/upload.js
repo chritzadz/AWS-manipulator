@@ -1,5 +1,15 @@
 const token = localStorage.getItem("jwt_token");
 
+window.onload = () => {
+    if (token){
+
+    }
+    else{
+        alert("Need to Log in first!");
+        windows.location.href = './index.html'
+    }
+};
+
 document.getElementById('uploadForm').addEventListener('submit', function(event) {
     event.preventDefault();
     const fileInput = document.getElementById('fileInput');
