@@ -27,7 +27,7 @@ AWS.config.update({
 ROUTE
 */
 //validate credentials
-app.post('/.netlify/functions/login', verifyToken, async (req, res) => {
+app.post('/.netlify/functions/login', async (req, res) => {
     const { accessKey, secretKey } = req.body;
 
     if (!accessKey || !secretKey) {
