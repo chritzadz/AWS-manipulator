@@ -24,11 +24,6 @@ const s3 = new AWS.S3();
 const ssm = new AWS.SSM();
 
 /*
-HELPER FUNCTION
-*/
-
-
-/*
 ROUTE
 */
 // get list of existing bucket
