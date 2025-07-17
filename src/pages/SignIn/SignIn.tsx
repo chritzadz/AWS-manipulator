@@ -1,11 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
+import { useNavigate } from 'react-router-dom';
+import { S3Client, ListBucketsCommand } from '@aws-sdk/client-s3';
 
 function SignIn() {
     const [secretKey, setSecretKey] = useState('');
     const [accessKey, setAccessKey] = useState('');
+    const [region, setRegion] = useState('');
+    const navigate = useNavigate();
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        try {
+            const response = await fetch('http://localhost:3001/api/authenticate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    accessKey,
+                    secretKey,
+                    region
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Authentication failed');
+            }
+
+            const data = await response.json();
+
+            console.log(data)
+        } catch (err) {
+            console.error('Error:', err);
+        }
+
+
         console.log('Secret Key:', secretKey);
         console.log('Access Key:', accessKey);
     };
@@ -35,6 +66,17 @@ function SignIn() {
                             id="accessKey"
                             value={accessKey}
                             onChange={(e) => setAccessKey(e.target.value)}
+                            className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
+                            required
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label htmlFor="region" className="block text-sm font-medium">Region:</label>
+                        <input
+                            type="text"
+                            id="region"
+                            value={region}
+                            onChange={(e) => setRegion(e.target.value)}
                             className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
                             required
                         />
