@@ -2,6 +2,15 @@ import React, { useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { S3Client, ListBucketsCommand } from '@aws-sdk/client-s3';
 
+function processBucketJSON(data: Object){
+    return data;
+}
+
+interface Bucket{
+    creationDate: string;
+    Name: string;
+}
+
 function SignIn() {
     const [secretKey, setSecretKey] = useState('');
     const [accessKey, setAccessKey] = useState('');
@@ -17,6 +26,7 @@ function SignIn() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     accessKey,
                     secretKey,
@@ -26,19 +36,26 @@ function SignIn() {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'Authentication failed');
+                throw new Error(errorData.error);
             }
 
             const data = await response.json();
 
-            console.log(data)
+            //process data
+            const tempArray = data.buckets.map((element: { Name: any }) => {
+                return {
+                    name: element.Name
+                    };
+            });
+
+            navigate('/home', {
+                state : {
+                    bucketList: tempArray
+                }
+            })
         } catch (err) {
-            console.error('Error:', err);
+            console.error(err);
         }
-
-
-        console.log('Secret Key:', secretKey);
-        console.log('Access Key:', accessKey);
     };
 
     return(
