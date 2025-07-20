@@ -1,10 +1,11 @@
 const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
+const serverless = require('serverless-http');
 const { S3Client, ListBucketsCommand, CreateBucketCommand } = require('@aws-sdk/client-s3');
 
 const app = express();
-const port = process.env.PORT || 3001;
+const router = express.Router();
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -24,7 +25,7 @@ app.use(session({
 }));
 
 
-app.post('/api/authenticate', async (req, res) => {
+app.post('/authenticate', async (req, res) => {
     const { accessKey, secretKey, region } = req.body;
 
     console.log(req.session.id)
@@ -57,7 +58,7 @@ app.post('/api/authenticate', async (req, res) => {
     }
 });
 
-app.post('/api/create_bucket', async (req, res) => {
+app.post('/create_bucket', async (req, res) => {
     const { bucketParams } = req.body;
 
     console.log('Session Credentials:', req.session.id);

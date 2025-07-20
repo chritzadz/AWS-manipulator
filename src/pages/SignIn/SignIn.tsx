@@ -11,7 +11,7 @@ function SignIn() {
         e.preventDefault();
 
         try {
-            const response = await fetch('https://aws-manipulator.netlify.app/api/authenticate', {
+            const response = await fetch('https://aws-manipulator.netlify.app/.netlify/functions/server/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
