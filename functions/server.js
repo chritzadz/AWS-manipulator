@@ -8,7 +8,7 @@ const app = express();
 const router = express.Router();
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://aws-manipulator.netlify.app',
     methods: ['GET', 'POST'],
     credentials: true
 }));
