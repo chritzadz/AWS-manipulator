@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type Key } from "react";
 import { useLocation } from "react-router-dom";
 
 function Home() {
@@ -63,7 +63,7 @@ function Home() {
                     <p className="p-5 text-2xl font-bold justify-center flex">Buckets</p>
                 </div>
                 <div className="flex flex-wrap pl-3">
-                    {bucketList.map((bucketObj: {name: string}, index) => (
+                    {bucketList.map((bucketObj: {name: string}, index: Key | null | undefined) => (
                         <div className="w-1/4 pr-3 pb-3">
                             <div key={index} className="bg-amber-300 w-full h-full rounded-lg text-black">
                                 <p className="p-3 font-bold flex flex-row justify-center">{bucketObj.name}</p>

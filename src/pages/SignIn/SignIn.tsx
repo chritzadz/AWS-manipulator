@@ -1,15 +1,5 @@
 import React, { useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { S3Client, ListBucketsCommand } from '@aws-sdk/client-s3';
-
-function processBucketJSON(data: Object){
-    return data;
-}
-
-interface Bucket{
-    creationDate: string;
-    Name: string;
-}
 
 function SignIn() {
     const [secretKey, setSecretKey] = useState('');
