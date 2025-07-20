@@ -84,6 +84,5 @@ app.post('/api/create_bucket', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
+app.use('/.netlify/functions/api', router);
+module.exports.handler = serverless(app);

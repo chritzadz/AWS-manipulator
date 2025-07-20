@@ -23,7 +23,7 @@ function Home() {
             setWarningEmpty(true)
         }
         else{
-            const response = await fetch('http://localhost:3001/api/create_bucket', {
+            const response = await fetch('https://aws-manipulator.netlify.app/api/create_bucket', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
