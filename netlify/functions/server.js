@@ -5,7 +5,6 @@ const serverless = require('serverless-http');
 const { S3Client, ListBucketsCommand, CreateBucketCommand } = require('@aws-sdk/client-s3');
 
 const app = express();
-const router = express.Router();
 
 app.use(cors({
     origin: 'https://aws-manipulator.netlify.app',
@@ -85,5 +84,4 @@ app.post('/create_bucket', async (req, res) => {
     }
 });
 
-app.use('/.netlify/functions/server', router);
 module.exports.handler = serverless(app);
