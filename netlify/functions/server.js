@@ -85,5 +85,5 @@ app.post('/create_bucket', async (req, res) => {
     }
 });
 
-app.use('/.netlify/functions/api', router);
+app.use('/.netlify/functions/server', router);
 module.exports.handler = serverless(app);
