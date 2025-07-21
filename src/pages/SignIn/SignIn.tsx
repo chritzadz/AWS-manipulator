@@ -11,7 +11,7 @@ function SignIn() {
         e.preventDefault();
 
         try {
-            const response = await fetch('/.netlify/functions/server/authenticate', {
+            const response = await fetch('/.netlify/functions/authenticate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -30,6 +30,8 @@ function SignIn() {
             }
 
             const data = await response.json();
+            console.log(data.token)
+            localStorage.setItem('authToken', data.token);
 
             //process data
             const tempArray = data.buckets.map((element: { Name: any }) => {

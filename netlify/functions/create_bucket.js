@@ -1,19 +1,13 @@
 // netlify/functions/create_bucket.js
 const { S3Client, CreateBucketCommand, ListBucketsCommand } = require('@aws-sdk/client-s3');
+const jwt = require('jsonwebtoken');
 
 exports.handler = async (event) => {
     const { bucketParams } = JSON.parse(event.body);
 
-    const token = event.headers.Authorization;
-
-    if (!token) {
-        return {
-            statusCode: 401,
-            body: JSON.stringify({ error: 'No token provided' }),
-        };
-    }
-
     try {
+        const token = event.headers.authorization?.split(' ')[1];
+        
         const secret = 'ubivox';
         const decoded = jwt.verify(token, secret);
 

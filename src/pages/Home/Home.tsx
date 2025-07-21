@@ -23,10 +23,15 @@ function Home() {
             setWarningEmpty(true)
         }
         else{
-            const response = await fetch('/.netlify/functions/server/create_bucket', {
+            const token = localStorage.getItem('authToken');
+            console.log(token)
+
+            console.log("fetching token exist")
+            const response = await fetch('/.netlify/functions/create_bucket', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 credentials: 'include',
                 body: JSON.stringify({
@@ -42,7 +47,6 @@ function Home() {
                 const errorData = await response.json();
                 throw new Error(errorData.error);
             } else {
-                //process bucket list json
                 const tempArray = data.buckets.map((element: { Name: any }) => {
                     return {
                         name: element.Name
@@ -51,7 +55,6 @@ function Home() {
 
                 setBucketList(tempArray)
             }
-
             setIsModalOpen(false)
         }
     }

@@ -25,8 +25,7 @@ exports.handler = async (event) => {
         const command = new ListBucketsCommand({});
         const data = await s3.send(command);
         
-        const token = jwt.sign({ accessKey, region }, secret, { expiresIn: '1h' });
-        
+        const token = jwt.sign({ accessKey, region, secretKey }, secret, { expiresIn: '1h' });
         return {
             statusCode: 200,
             body: JSON.stringify({ buckets: data.Buckets || [], token: token }),
