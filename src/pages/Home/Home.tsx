@@ -24,9 +24,6 @@ function Home() {
         }
         else{
             const token = localStorage.getItem('authToken');
-            console.log(token)
-
-            console.log("fetching token exist")
             const response = await fetch('/.netlify/functions/create_bucket', {
                 method: 'POST',
                 headers: {
