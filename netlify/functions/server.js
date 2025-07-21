@@ -5,21 +5,23 @@ const serverless = require('serverless-http');
 const { S3Client, ListBucketsCommand, CreateBucketCommand } = require('@aws-sdk/client-s3');
 
 const app = express();
-
-app.use(cors({
-    origin: 'https://aws-manipulator.netlify.app',
-    methods: ['GET', 'POST'],
-    credentials: true
-}));
-
 app.use(express.json());
+const router = Router();
+
+const corsOptions = {
+    origin: true,
+    credentials: true
+};
+
+app.use(cors(corsOptions));
+
 app.use(session({
     secret: 'ubivox', // Change this to a strong secret
     resave: false,
     saveUninitialized: true,
     cookie: {
         maxAge: 60000 * 60,
-        secure: true
+        secure: false
     }
 }));
 
@@ -84,4 +86,5 @@ app.post('/create_bucket', async (req, res) => {
     }
 });
 
-module.exports.handler = serverless(app);
+app.use("/api/", router)
+export const handler = serverless(app)

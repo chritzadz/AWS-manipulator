@@ -23,7 +23,7 @@ function Home() {
             setWarningEmpty(true)
         }
         else{
-            const response = await fetch('https://aws-manipulator.netlify.app/.netlify/functions/server/create_bucket', {
+            const response = await fetch('/.netlify/functions/server/create_bucket', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
