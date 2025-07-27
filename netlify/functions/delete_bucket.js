@@ -1,5 +1,5 @@
 // netlify/functions/delete_bucket.js
-const { S3Client, CreateBucketCommand, ListBucketsCommand } = require('@aws-sdk/client-s3');
+const { S3Client, DeleteBucketCommand, ListBucketsCommand } = require('@aws-sdk/client-s3');
 const jwt = require('jsonwebtoken');
 
 exports.handler = async (event) => {

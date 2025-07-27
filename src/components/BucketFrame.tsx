@@ -3,12 +3,17 @@ import deleteIcon from "../assets/delete.png"
 
 interface BucketFrameProps {
     bucketName: string;
+    onDelete: (name: string) => void;
 }
 
 export function BucketFrame(
-    { bucketName }: BucketFrameProps
+    { bucketName, onDelete}: BucketFrameProps
 ) {
     const [isHover, setIsHover] = useState(false);
+
+    const handleClick = () => {
+        onDelete(bucketName);
+    };
 
     return (
         <div className="w-full"
@@ -20,6 +25,7 @@ export function BucketFrame(
                     <img
                         src={deleteIcon}
                         alt={`${bucketName} image`}
+                        onClick={handleClick}
                         className="w-1/12 h-auto rounded-t-lg absolute top-0 right-0 m-2"
                     />
                 )}

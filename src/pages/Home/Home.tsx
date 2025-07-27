@@ -8,6 +8,8 @@ function Home() {
 
     const [bucketName, setBucketName] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+    const [bucketNameDeleted, setbucketNameDeleted] = useState('');
     const [warningEmpty, setWarningEmpty] = useState(false);
 
     const handleOpenAddNewBucketWindow = () => {
@@ -17,6 +19,15 @@ function Home() {
     const handleCloseAddNewBucketWindow = () => {
         setIsModalOpen(false)
         setWarningEmpty(false)
+    };
+
+    const handleOpenDeleteBucketWindow = (name: string) => {
+        setIsModalDeleteOpen(true);
+        setbucketNameDeleted(name);
+    };
+
+    const handleCloseDeleteBucketWindow = () => {
+        setIsModalDeleteOpen(false)
     };
 
     const handleAddBucket = async () => {
@@ -57,16 +68,50 @@ function Home() {
         }
     }
 
+    const handleDeleteBucket = async () => {
+        const token = localStorage.getItem('authToken');
+        const response = await fetch('/.netlify/functions/delete_bucket', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                bucketParams: {
+                    Bucket: bucketNameDeleted
+                }
+            })
+        });
+
+        const data = await response.json()
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error);
+        } else {
+            const tempArray = data.buckets.map((element: { Name: any }) => {
+                return {
+                    name: element.Name
+                };
+            })
+
+            setBucketList(tempArray)
+        }
+        setbucketNameDeleted('')
+        setIsModalDeleteOpen(false)
+    }
+
     return(
         <div className="bg-amber-200 h-screen w-screen flex flex-row gap-20 pt-20 pb-10 justify-center">
-            <div className="rounded-3xl bg-amber-100 w-1/2">
+            <div className="rounded-3xl bg-amber-100 w-1/2 flex-col flex">
                 <div>
                     <p className="p-5 text-2xl font-bold justify-center flex">Buckets</p>
                 </div>
                 <div className="flex flex-wrap pl-3">
                     {bucketList.map((bucketObj: {name: string}, index: Key | null | undefined) => (
-                        <div className="w-1/4 pr-3 pb-3">
-                            <BucketFrame bucketName={bucketObj.name}></BucketFrame>
+                        <div key={index} className="w-1/4 pr-3 pb-3">
+                            <BucketFrame bucketName={bucketObj.name} onDelete={handleOpenDeleteBucketWindow} ></BucketFrame>
                         </div>
                     ))}
 
@@ -102,6 +147,23 @@ function Home() {
                                 </button>
                                 <button onClick={handleAddBucket} className="bg-amber-800 text-white text-2xs px-4 py-2 rounded font-bold">
                                     Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {isModalDeleteOpen && (
+                    <div className="fixed inset-0 bg-gray-50/75 flex justify-center items-center">
+                        <div className="bg-white rounded-lg p-5 w-1/3">
+                            <h2 className="text-lg font-bold mb-2">Delete Bucket</h2>
+                            <p className="mb-4"> Are you sure you want to delete <span className="font-bold">{bucketNameDeleted}</span> bucket?</p>
+                            <div className="flex justify-between">
+                                <button onClick={handleCloseDeleteBucketWindow} className="text-2xs bg-amber-800 text-white px-4 py-2 rounded font-bold">
+                                    Cancel
+                                </button>
+                                <button onClick={handleDeleteBucket} className="bg-amber-800 text-white text-2xs px-4 py-2 rounded font-bold">
+                                    Delete
                                 </button>
                             </div>
                         </div>
