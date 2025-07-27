@@ -1,0 +1,30 @@
+import { useState } from "react";
+import deleteIcon from "../assets/delete.png"
+
+interface BucketFrameProps {
+    bucketName: string;
+}
+
+export function BucketFrame(
+    { bucketName }: BucketFrameProps
+) {
+    const [isHover, setIsHover] = useState(false);
+
+    return (
+        <div className="w-full"
+            onMouseEnter={() => setIsHover(true)}
+            onMouseLeave={() => setIsHover(false)}
+        >
+            <div className="bg-amber-300 w-full h-full rounded-lg text-black relative">
+                {isHover && (
+                    <img
+                        src={deleteIcon}
+                        alt={`${bucketName} image`}
+                        className="w-1/12 h-auto rounded-t-lg absolute top-0 right-0 m-2"
+                    />
+                )}
+                <p className="p-3 font-bold flex flex-row justify-center">{bucketName}</p>
+            </div>
+        </div>
+    );
+}

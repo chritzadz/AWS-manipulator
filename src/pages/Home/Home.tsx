@@ -1,5 +1,6 @@
 import { useState, type Key } from "react";
 import { useLocation } from "react-router-dom";
+import { BucketFrame } from "../../components/BucketFrame";
 
 function Home() {
     const { state } = useLocation();
@@ -14,7 +15,7 @@ function Home() {
     };
 
     const handleCloseAddNewBucketWindow = () => {
-        setIsModalOpen(false);
+        setIsModalOpen(false)
         setWarningEmpty(false)
     };
 
@@ -65,9 +66,7 @@ function Home() {
                 <div className="flex flex-wrap pl-3">
                     {bucketList.map((bucketObj: {name: string}, index: Key | null | undefined) => (
                         <div className="w-1/4 pr-3 pb-3">
-                            <div key={index} className="bg-amber-300 w-full h-full rounded-lg text-black">
-                                <p className="p-3 font-bold flex flex-row justify-center">{bucketObj.name}</p>
-                            </div>
+                            <BucketFrame bucketName={bucketObj.name}></BucketFrame>
                         </div>
                     ))}
 
