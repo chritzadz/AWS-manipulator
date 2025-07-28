@@ -1,17 +1,46 @@
-import { useState, type Key } from "react";
+import { useEffect, useState, type Key } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BucketFrame } from "../../components/BucketFrame";
 
 function Home() {
+    const [ bucketList, setBucketList ] = useState([]);
+    useEffect(() => {
+        const fetchBucketList = async () => {
+            const token = localStorage.getItem('authToken');
+            try {
+                const response = await fetch('/.netlify/functions/get_bucket', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    credentials: 'include',
+                });
+
+                if (!response.ok) {
+                    throw new Error();
+                }
+
+                const data = await response.json();
+                setBucketList(data?.buckets || []);
+            } catch (error) {
+                console.error('Error fetching bucket list:', error);
+            }
+        };
+
+        fetchBucketList();
+    }, []);
+    
+
     const navigate = useNavigate();
-    const { state } = useLocation();
-    const [ bucketList, setBucketList ] = useState(state?.bucketList);
 
     const [bucketName, setBucketName] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
     const [bucketNameDeleted, setbucketNameDeleted] = useState('');
     const [warningEmpty, setWarningEmpty] = useState(false);
+
+    
 
     const handleOpenAddNewBucketWindow = () => {
         setIsModalOpen(true);
@@ -114,6 +143,7 @@ function Home() {
             }
         })
     }
+    
 
     return(
         <div className="bg-amber-200 h-screen w-screen flex flex-row gap-20 pt-20 pb-10 justify-center">
