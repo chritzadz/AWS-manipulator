@@ -1,8 +1,9 @@
 import { useState, type Key } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { BucketFrame } from "../../components/BucketFrame";
 
 function Home() {
+    const navigate = useNavigate();
     const { state } = useLocation();
     const [ bucketList, setBucketList ] = useState(state?.bucketList);
 
@@ -102,6 +103,18 @@ function Home() {
         setIsModalDeleteOpen(false)
     }
 
+    const handleBucketClick = (name: string) => {
+        navigateBucket(name)
+    }
+
+    const navigateBucket = (name: string) => {
+        navigate('/bucket', {
+            state : {
+                bucketName : name
+            }
+        })
+    }
+
     return(
         <div className="bg-amber-200 h-screen w-screen flex flex-row gap-20 pt-20 pb-10 justify-center">
             <div className="rounded-3xl bg-amber-100 w-1/2 flex-col flex">
@@ -111,7 +124,7 @@ function Home() {
                 <div className="flex flex-wrap pl-3">
                     {bucketList.map((bucketObj: {name: string}, index: Key | null | undefined) => (
                         <div key={index} className="w-1/4 pr-3 pb-3">
-                            <BucketFrame bucketName={bucketObj.name} onDelete={handleOpenDeleteBucketWindow} ></BucketFrame>
+                            <BucketFrame bucketName={bucketObj.name} onDelete={handleOpenDeleteBucketWindow}  onClick={handleBucketClick}></BucketFrame>
                         </div>
                     ))}
 
