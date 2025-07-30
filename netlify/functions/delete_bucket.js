@@ -1,5 +1,5 @@
 // netlify/functions/delete_bucket.js
-const { S3Client, DeleteBucketCommand, ListBucketsCommand } = require('@aws-sdk/client-s3');
+const { S3Client, DeleteBucketCommand, ListBucketsCommand, ListObjectsV2Command, DeleteObjectsCommand} = require('@aws-sdk/client-s3');
 const jwt = require('jsonwebtoken');
 
 exports.handler = async (event) => {
@@ -18,6 +18,22 @@ exports.handler = async (event) => {
                 secretAccessKey: decoded.secretKey,
             },
         });
+
+        //before delete, delete all objects
+        const listCommand = new ListObjectsV2Command({ Bucket: bucketParams.Bucket });
+        const listedObjects = await s3.send(listCommand);
+        const objectsToDelete = listedObjects.Contents.map(object => ({ Key: object.Key }));
+
+        if (listedObjects.Contents.length === 0) {
+            //do nothing shoudl fix this with the condition tho.
+        }
+        else{
+            const deleteCommand = new DeleteObjectsCommand({
+                Bucket: bucketParams.Bucket,
+                Delete: { Objects: objectsToDelete }
+            });
+            await s3.send(deleteCommand);
+        }
 
         const command = new DeleteBucketCommand(bucketParams);
         await s3.send(command);

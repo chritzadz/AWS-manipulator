@@ -1,6 +1,28 @@
 // netlify/functions/create_bucket.js
-const { S3Client, CreateBucketCommand, ListBucketsCommand } = require('@aws-sdk/client-s3');
+const { S3Client, CreateBucketCommand, ListBucketsCommand, PutObjectCommand, ListObjectsV2Command } = require('@aws-sdk/client-s3');
+const fs = require('fs').promises;
 const jwt = require('jsonwebtoken');
+
+uploadFile = async (file, key, bucketName, s3) => {
+    let command = null
+
+    if (file != null){
+        command = new PutObjectCommand({
+            Bucket: bucketName,
+            Key: key,
+            Body: file,
+        });
+    }
+    else{
+        command = new PutObjectCommand({
+            Bucket: bucketName,
+            Key: key,
+        });
+    }
+
+    console.log(bucketName, key, file == null)
+    await s3.send(command);
+}
 
 exports.handler = async (event) => {
     const { bucketParams } = JSON.parse(event.body);
@@ -24,6 +46,14 @@ exports.handler = async (event) => {
 
         const commandGetBucket = new ListBucketsCommand({});
         const newBucketList = await s3.send(commandGetBucket);
+
+        await uploadFile(await fs.readFile("src/assets/bucket_template/index.html"), "index.html", bucketParams.Bucket, s3);
+        await uploadFile(await fs.readFile("src/assets/bucket_template/viewer/index.html"), "viewer/index.html", bucketParams.Bucket, s3);
+        await uploadFile(await fs.readFile("src/assets/bucket_template/viewer/data.csv"), "viewer/data.csv", bucketParams.Bucket, s3);
+        await uploadFile(await fs.readFile("src/assets/bucket_template/viewer/main.js"), "viewer/main.js", bucketParams.Bucket, s3);
+        await uploadFile(await fs.readFile("src/assets/bucket_template/viewer/style.css"), "viewer/style.css", bucketParams.Bucket, s3);
+        await uploadFile(null, "viewer/background/" , bucketParams.Bucket, s3);
+        await uploadFile(null, "viewer/models/", bucketParams.Bucket, s3);
 
         return {
             statusCode: 200,
